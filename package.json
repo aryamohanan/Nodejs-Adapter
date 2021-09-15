@@ -1,0 +1,62 @@
+{
+  "name": "my-project-template",
+  "version": "0.0.1",
+  "description": "This is a sample template for my services",
+  "main": "src/main.ts",
+  "dependencies": {
+    "@promster/express": "^4.1.11",
+    "@types/express": "^4.17.3",
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.2",
+    "@types/pg": "^7.14.5",
+    "cross-env": "^7.0.0",
+    "express": "^4.17.1",
+    "guid-typescript": "^1.0.9",
+    "jest": "^26.4.2",
+    "nan": "2.3.*",
+    "nock": "^10.0.6",
+    "node-fetch": "^2.5.0",
+    "node-rdkafka": "^2.10.1",
+    "nodemon": "^1.19.1",
+    "pg": "^8.3.3",
+    "prom-client": "^12.0.0",
+    "reflect-metadata": "^0.1.13",
+    "ts-mockito": "^2.5.0",
+    "typeorm": "^0.2.26"
+  },
+  "devDependencies": {
+    "dotenv": "^6.2.0",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.3.0",
+    "ts-node": "^7.0.1",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^3.4.5"
+  },
+  "scripts": {
+    "start": "node -r ts-node/register -r tsconfig-paths/register  index.ts",
+    "start:dev": "cross-env NODE_ENV=dev npm run nodemon",
+    "build": "docker build -t docker-reg.kore.korewireless.com/kore-my/my-project-template. ",
+    "test": "jest --verbose --coverage --passWithNoTests",
+    "test:docker": "npx jest --silent --coverage --coverageReporters=teamcity --runInBand",
+    "test-watch": "jest --watchAll --verbose",
+    "start-k8s": "npm run start",
+    "nodemon": "nodemon --exec node -r ts-node/register -r tsconfig-paths/register  -r dotenv/config index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.kore.korewireless.com:my/my-project-template.git"
+  },
+  "keywords": [
+    "expressjs",
+    "typescript"
+  ],
+  "author": "My Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.kore.korewireless.com/my/my-project-template/issues"
+  },
+  "homepage": "https://gitlab.kore.korewireless.com/my/my-project-template/blob/master/README.md",
+  "directories": {
+    "lib": "lib"
+  }
+}

@@ -1,0 +1,19 @@
+app:
+  name: my-project-template
+deployment:
+  name: my-project-template
+container:
+  name: my-project-template-container
+  image: my-project-template/image 
+  tag: latest
+service:
+  name: my-project-template
+  port: 9100
+ingress:
+  name: my-project-template
+kafka:
+  endpoint: "my-broker-service"
+  port: 9092
+postgres:
+  name: postgres-db
+

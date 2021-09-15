@@ -1,0 +1,33 @@
+image: node:10
+stages:
+  - build
+  - test
+  - deploy
+cache:
+  paths:
+    - node_modules/
+install_dependencies:
+  stage: build
+  script:
+    - npm install
+  artifacts:
+    paths:
+      - node_modules/
+testing_testing:
+  stage: test
+  script: 
+    - npm run test
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  artifacts:
+    paths:
+      - coverage/
+pages:
+  stage: deploy
+  dependencies:
+    - testing_testing
+  script:
+    - mv coverage/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days

@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: [[ .Namespace ]]
+  labels:
+    app: {{ .Values.app.name }}
+    version: {{ .Values.image.tag }}
+    environment: [[ .Environment ]]
+    AccountableTeam: My
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 33%
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+        version: {{ .Values.image.tag }}
+        environment: [[ .Environment ]]
+        AccountableTeam: My
+    spec:
+      containers:
+      - name: {{ .Values.container.name }}
+        image: {{ .Values.container.image }}:{{ .Values.image.tag }}
+        imagePullPolicy: Always
+        env:
+        - name: kafkaGroupId
+          value: "kafka"
+        - name: kafkaBrokerList
+          value: "{{ .Values.kafka.endpoint }}.[[ .Namespace ]].svc.cluster.local"
+        - name: kafkaBrokerPort
+          value: "{{ .Values.kafka.port }}"               
+        - name: port
+          value: "9100"                
+        - name: ShortHash
+          value: "[[ .Env.ShortHash ]]"
+        - name: postgresContactPoint
+          value: "{{ .Values.postgres.name }}.[[ .Namespace ]].svc.cluster.local"
+        - name: postgresContactPointPort
+          value: "[[ .Env.postgresContactPointPort]]"
+        - name: postgresDatabase
+          value: "[[ .Env.postgresDatabase ]]"
+        - name: postgresSchema
+          value: "[[ .Env.postgresSchema ]]"
+        - name: postgresDbUserName
+          value: "[[ .Env.postgresDbUserName ]]"
+        - name: PostgresDataPassword
+          valueFrom:
+            secretKeyRef:
+              name: cmp-passwords
+              key: "PostgresDataPassword-[[ .Environment ]]"     
+        - name: postgresPoolSize
+          value: "[[ .Env.postgresPoolSize]]"
+        - name: buildNumber
+          value: "[[ .Env.buildNumber ]]"
+        ports:
+        - name: http
+          containerPort: {{ .Values.service.port }}
+        livenessProbe:
+            httpGet:
+              path: /api/v1/status
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 90
+            timeoutSeconds: 30
+        readinessProbe:
+            httpGet:
+              path: /api/v1/status
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 90
+            timeoutSeconds: 30
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "200Mi"
+          limits:
+            cpu: "250m"
+            memory: "500Mi"
+      imagePullSecrets:
+      - name: regcred
