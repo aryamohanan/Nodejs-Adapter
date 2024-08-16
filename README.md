@@ -1,4 +1,4 @@
-# My Project Template
+# My First APP
 
 ## Template Technical Stack
 
